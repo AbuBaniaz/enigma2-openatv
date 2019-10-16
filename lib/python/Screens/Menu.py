@@ -515,8 +515,7 @@ class Menu(Screen, ProtectedScreen):
 		self.close(True)
 
 	def createSummary(self):
-		if config.usage.menutype.value == "standard":
-			return MenuSummary
+		return MenuSummary
 
 	def isProtected(self):
 		if config.ParentalControl.setuppinactive.value:
