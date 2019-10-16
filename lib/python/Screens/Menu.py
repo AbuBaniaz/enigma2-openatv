@@ -810,6 +810,12 @@ class AnimMain(Screen):
 			self['menu'].setIndex(number)
 			self.okbuttonClick()
 
+	def keyNumberGlobal(self, number):
+		number -= 1
+		if len(self['menu'].list) > number:
+			self['menu'].setIndex(number)
+			self.okbuttonClick()
+
 	def closeNonRecursive(self):
 		self.close(False)
 
@@ -1023,6 +1029,12 @@ class IconMain(Screen):
 			self.ipage = 1
 		self.index = 0
 		self.openTest()
+
+	def keyNumberGlobal(self, number):
+		number -= 1
+		if len(self['menu'].list) > number:
+			self['menu'].setIndex(number)
+			self.okbuttonClick()
 
 	def keyNumberGlobal(self, number):
 		number -= 1
