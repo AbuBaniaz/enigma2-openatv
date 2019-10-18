@@ -13,7 +13,6 @@ from Plugins.Plugin import PluginDescriptor
 from Tools.Directories import resolveFilename, SCOPE_SKIN, SCOPE_CURRENT_SKIN
 from enigma import eTimer
 from Components.Pixmap import Pixmap, MovingPixmap
-from Components.Sources.StaticText import StaticText
 from Components.Button import Button
 from Tools.LoadPixmap import LoadPixmap
 import os
@@ -314,15 +313,15 @@ m_list.append((l[0], boundFunction(l[1], self.session), l[2], l[3] or 50, descri
 
 # for the skin: first try a menu_<menuID>, then Menu
 self.skinName = [ ]
+if 'horz' in config.usage.menutype.value:
 skfile = '/usr/share/enigma2/' + config.skin.primary_skin.value
 f1 = open(skfile, 'r')
 self.sktxt = f1.read()
 f1.close()
 if menuID is not None:
-if '<screen name="Animmain" ' in self.sktxt and config.usage.menutype.value == 'horzanim':
+if config.usage.menutype.value == 'horzanim' and '<screen name="Animmain" ' in self.sktxt:
 self.skinName.append('Animmain')
-elif '<screen name="Iconmain" ' in self.sktxt and config.usage.menutype.value == 'horzicon':
-if '<screen name="Iconmain" ' in self.sktxt:
+elif config.usage.menutype.value == 'horzicon' and '<screen name="Iconmain" ' in self.sktxt:
 self.skinName.append('Iconmain')
 else:
 self.skinName.append('menu_' + menuID)
@@ -438,10 +437,9 @@ t_history.thistory = str(a) + ' > '
 else:
 t_history.thistory = t_history.thistory + str(a) + ' > '
 
-if '<screen name="Animmain" ' in self.sktxt and config.usage.menutype.value == 'horzanim':
+if config.usage.menutype.value == 'horzanim' and '<screen name="Animmain" ' in self.sktxt:
 self.onShown.append(self.openTestA)
-elif '<screen name="Iconmain" ' in self.sktxt and config.usage.menutype.value == 'horzicon':
-if '<screen name="Iconmain" ' in self.sktxt:
+elif config.usage.menutype.value == 'horzicon' and '<screen name="Iconmain" ' in self.sktxt:
 self.onShown.append(self.openTestB)
 
 self.number = 0
@@ -617,9 +615,9 @@ i = 10
 idx = 0
 for x in self.list:
 self.sub_menu_sort.changeConfigValue(x[2], "sort", i)
-if len(x) >= 5:
+if len(x) >= 7:
 entry = list(x)
-entry[4] = i
+entry[6] = i
 entry = tuple(entry)
 self.list.pop(idx)
 self.list.insert(idx, entry)
@@ -652,7 +650,7 @@ for entry in rm_list:
 if entry in m_list:
 m_list.remove(entry)
 if not len(m_list):
-m_list.append(('', None, 'dummy', '10', 10, '', None))
+m_list.append(('', None, 'dummy', '10', '', None, 10))
 m_list.sort(key=lambda listweight: int(listweight[6]))
 self.list = list(m_list)
 
@@ -801,25 +799,16 @@ return
 self.openTest()
 
 def key_up(self):
-pass
+self.key_left()
 
 def key_down(self):
-pass
+self.key_right()
 
 def keyNumberGlobal(self, number):
 number -= 1
 if len(self['menu'].list) > number:
 self['menu'].setIndex(number)
 self.okbuttonClick()
-
-def closeNonRecursive(self):
-self.close(False)
-
-def closeRecursive(self):
-self.close(True)
-
-def createSummary(self):
-pass
 
 def keyNumberGlobal(self, number):
 number -= 1
@@ -1013,6 +1002,8 @@ self.index = 0
 self.openTest()
 
 def key_up(self):
+self.key_left()
+return
 self.ipage = self.ipage - 1
 if self.ipage < 1 and 7 > self.picnum > 0:
 self.ipage = 1
@@ -1028,6 +1019,8 @@ self.index = 0
 self.openTest()
 
 def key_down(self):
+self.key_right()
+return
 self.ipage = self.ipage + 1
 if self.ipage == 2 and 7 > self.picnum > 0:
 self.ipage = 1
@@ -1047,15 +1040,6 @@ number -= 1
 if len(self['menu'].list) > number:
 self['menu'].setIndex(number)
 self.okbuttonClick()
-
-def closeNonRecursive(self):
-self.close(False)
-
-def closeRecursive(self):
-self.close(True)
-
-def createSummary(self):
-pass
 
 def keyNumberGlobal(self, number):
 number -= 1
