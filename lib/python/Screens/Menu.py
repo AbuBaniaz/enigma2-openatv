@@ -515,6 +515,7 @@ t_history.reset()
 self.close(True)
 
 def createSummary(self):
+if config.usage.menutype.value == "standard":
 return MenuSummary
 
 def isProtected(self):
